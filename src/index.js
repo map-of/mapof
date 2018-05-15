@@ -5,12 +5,15 @@ import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
+import initGlobalStyles from './global-styles/index';
 import registerServiceWorker from './registerServiceWorker';
 
 import reducers from './ducks/index.js';
 import sagas from './ducks/sagas.js';
 
 import App from './components/app';
+
+initGlobalStyles();
 
 const logger = createLogger({
   diff: true,
