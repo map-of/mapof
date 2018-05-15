@@ -1,0 +1,33 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createLogger} from 'redux-logger';
+import {Provider} from 'react-redux';
+import {createStore, applyMiddleware} from 'redux';
+import createSagaMiddleware from 'redux-saga';
+
+import registerServiceWorker from './registerServiceWorker';
+
+import reducers from './ducks/index.js';
+import sagas from './ducks/sagas.js';
+
+import App from './components/app';
+
+const logger = createLogger({
+  diff: true,
+  collapsed: true,
+  timestamp: false
+});
+
+const sagaMiddleware = createSagaMiddleware(sagas);
+const store = createStore(reducers, applyMiddleware(logger, sagaMiddleware));
+
+sagaMiddleware.run(sagas);
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
+
+registerServiceWorker();
