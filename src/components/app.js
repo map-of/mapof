@@ -1,35 +1,87 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
-import {Map, Marker, Popup, TileLayer} from 'react-leaflet';
+import mapboxgl from 'mapbox-gl';
 
-const MapWrapper = styled.div`
+import {fetchArtists} from '../ducks/artists';
+
+import mapStyle from '../config/map-style.json';
+
+const Map = styled.div`
   width: 100vw;
   height: 100vh;
 `;
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {map: null, mapInitialized: false};
+  }
+
+  componentDidMount() {
+    this.props.dispatch(fetchArtists('techno'));
+  }
+
+  componentDidUpdate() {
+    if (this.props.artists && this.state.map) {
+      const artists = {
+        type: 'FeatureCollection',
+        features: this.props.artists.map(artist => {
+          return {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [artist.lng, artist.lat]
+            }
+          };
+        })
+      };
+
+      this.state.map.getSource('artists').setData(artists);
+    }
+  }
+
+  initMap(container) {
+    if (this.state.mapInitialized) {
+      return;
+    }
+
+    const map = new mapboxgl.Map({
+      container,
+      style: mapStyle,
+      center: [10, 53],
+      zoom: 2
+    });
+
+    map.on('load', function() {
+      map.addLayer({
+        id: 'artists',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: null
+        },
+        paint: {
+          'circle-color': '#BD10E0',
+          'circle-radius': 5,
+          'circle-stroke-width': 5,
+          'circle-stroke-color': '#BD10E0',
+          'circle-stroke-opacity': 0.5
+        }
+      });
+    });
+    this.setState({map, mapInitialized: true});
+  }
+
   render() {
-    return (
-      <MapWrapper>
-        <Map
-          center={[51.505, -0.09]}
-          zoom={13}
-          style={{width: '100%', height: '100%'}}>
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-          />
-          <Marker position={[51.505, -0.09]}>
-            <Popup>
-              <span>
-                A pretty CSS3 popup.<br />Easily customizable.
-              </span>
-            </Popup>
-          </Marker>
-        </Map>
-      </MapWrapper>
-    );
+    return <Map innerRef={div => this.initMap(div)} />;
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    artists: state.artists
+  };
+}
+
+export default connect(mapStateToProps)(App);

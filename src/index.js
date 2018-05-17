@@ -8,8 +8,8 @@ import createSagaMiddleware from 'redux-saga';
 import initGlobalStyles from './global-styles/index';
 import registerServiceWorker from './registerServiceWorker';
 
-import reducers from './ducks/index.js';
-import sagas from './ducks/sagas.js';
+import reducers from './ducks/index';
+import sagas from './ducks/sagas';
 
 import App from './components/app';
 

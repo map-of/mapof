@@ -38,7 +38,7 @@ export function fetchArtists(genre) {
 function* fetchArtistsWorker(action) {
   try {
     const artists = yield call(fetchArtistsApi, action.payload);
-    yield put({type: FETCH_ARTISTS_SUCCESS, payload: JSON.parse(artists)});
+    yield put(fetchArtistsSuccess(JSON.parse(artists)));
   } catch (error) {
     yield put({type: FETCH_ARTISTS_ERROR, payload: error});
   }
