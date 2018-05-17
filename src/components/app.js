@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
+
 import {connect} from 'react-redux';
 import styled from 'styled-components';
 import mapboxgl from 'mapbox-gl';
 
 import {fetchArtists} from '../ducks/artists';
+
+import Popup from './popup';
 
 import mapStyle from '../config/map-style.json';
 
@@ -20,18 +24,49 @@ class App extends Component {
 
   componentDidMount() {
     this.props.dispatch(fetchArtists('techno'));
+    this.tooltipContainer = document.createElement('div');
   }
 
   componentDidUpdate() {
-    if (this.props.artists && this.state.map) {
+    if (
+      this.state.map &&
+      this.state.map.getSource('artists') &&
+      this.props.artists
+    ) {
       const artists = {
         type: 'FeatureCollection',
         features: this.props.artists.map(artist => {
+          const {
+            id,
+            status,
+            name,
+            lat,
+            lng,
+            city,
+            genre,
+            info,
+            wikipedia,
+            soundcloud,
+            user,
+            timestamp
+          } = artist;
           return {
             type: 'Feature',
             geometry: {
               type: 'Point',
-              coordinates: [artist.lng, artist.lat]
+              coordinates: [lng, lat]
+            },
+            properties: {
+              id,
+              status,
+              name,
+              city,
+              genre,
+              info,
+              wikipedia,
+              soundcloud,
+              user,
+              timestamp
             }
           };
         })
@@ -42,7 +77,7 @@ class App extends Component {
   }
 
   initMap(container) {
-    if (this.state.mapInitialized) {
+    if (!container || this.state.mapInitialized) {
       return;
     }
 
@@ -53,7 +88,7 @@ class App extends Component {
       zoom: 2
     });
 
-    map.on('load', function() {
+    map.on('load', () => {
       map.addLayer({
         id: 'artists',
         type: 'circle',
@@ -70,6 +105,34 @@ class App extends Component {
         }
       });
     });
+
+    map.on('click', 'artists', event => {
+      const artist = event.features[0];
+      const coordinates = artist.geometry.coordinates.slice();
+
+      // Ensure that if the map is zoomed out such that multiple
+      // copies of the feature are visible, the popup appears
+      // over the copy being pointed to.
+      while (Math.abs(event.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += event.lngLat.lng > coordinates[0] ? 360 : -360;
+      }
+
+      ReactDOM.render(<Popup artist={artist} />, this.tooltipContainer);
+
+      new mapboxgl.Popup({closeButton: false})
+        .setLngLat(coordinates)
+        .setDOMContent(this.tooltipContainer)
+        .addTo(map);
+    });
+
+    map.on('mouseenter', 'artists', () => {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+
+    map.on('mouseleave', 'artists', () => {
+      map.getCanvas().style.cursor = '';
+    });
+
     this.setState({map, mapInitialized: true});
   }
 
