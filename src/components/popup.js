@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import ReactPlayer from 'react-player';
-import wiki from 'wikijs';
+// import wiki from 'wikijs';
 
 const Container = styled.div`
   width: 450px;
@@ -42,36 +42,36 @@ export default class Popup extends Component {
   }
 
   componentDidMount() {
-    this.getWikiSummary();
+    // this.getWikiSummary();
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.artist.properties.id !== this.props.artist.properties.id) {
       this.setState({summary: null});
-      this.getWikiSummary();
+      // this.getWikiSummary();
     }
   }
 
-  getWikiSummary() {
-    if (!this.props.artist.properties.wikipedia) {
-      return;
-    }
+  // getWikiSummary() {
+  //   if (!this.props.artist.properties.wikipedia) {
+  //     return;
+  //   }
 
-    const wikiSplit = this.props.artist.properties.wikipedia.split('/');
-    const wikisPage =
-      wikiSplit[wikiSplit.length - 1] || wikiSplit[wikiSplit.length - 2];
+  //   const wikiSplit = this.props.artist.properties.wikipedia.split('/');
+  //   const wikisPage =
+  //     wikiSplit[wikiSplit.length - 1] || wikiSplit[wikiSplit.length - 2];
 
-    return wiki()
-      .page(wikisPage)
-      .then(page => {
-        return page.summary();
-      })
-      .then(summary =>
-        this.setState({
-          summary: `${summary.substr(0, 300)}\u2026`
-        })
-      );
-  }
+  //   return wiki()
+  //     .page(wikisPage)
+  //     .then(page => {
+  //       return page.summary();
+  //     })
+  //     .then(summary =>
+  //       this.setState({
+  //         summary: `${summary.substr(0, 300)}\u2026`
+  //       })
+  //     );
+  // }
 
   render() {
     return (
