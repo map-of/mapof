@@ -4,16 +4,16 @@
   "private": true,
   "dependencies": {
     "mapbox-gl": "^0.45.0",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "react-player": "^1.6.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-player": "^1.6.4",
     "react-redux": "^5.0.7",
     "react-scripts": "1.1.4",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
-    "styled-components": "^3.2.6",
-    "wikijs": "^4.7.0"
+    "styled-components": "^3.3.2",
+    "wikijs": "^4.8.0"
   },
   "scripts": {
     "start": "react-scripts start",
