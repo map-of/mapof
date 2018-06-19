@@ -25,10 +25,15 @@ class GenreSelector extends Component {
         {genres.map(genre => {
           const {name} = genre;
 
+          // prettier-ignore
+          const capitalizedName = `
+            ${name.charAt(0).toUpperCase()}${name.slice(1)}
+          `;
+
           return (
-            <option key={name} value={name}>{`${name
-              .charAt(0)
-              .toUpperCase()}${name.slice(1)}`}</option>
+            <option key={name} value={name}>
+              {capitalizedName}
+            </option>
           );
         })}
       </Select>
