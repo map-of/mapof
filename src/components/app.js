@@ -1,9 +1,15 @@
 import React, {Component} from 'react';
 
 import Map from './map';
+import GenreSelector from './genre-selector';
 
 export default class App extends Component {
   render() {
-    return <Map />;
+    return (
+      <React.Fragment>
+        <Map />
+        <GenreSelector />
+      </React.Fragment>
+    );
   }
 }
