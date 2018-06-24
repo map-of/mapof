@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
 
@@ -14,14 +15,16 @@ const Select = styled.select`
 
 class GenreSelector extends Component {
   handleSelect(event) {
-    this.props.setGenre(
-      genres.find(genre => genre.name === event.target.value)
+    this.props.history.push(
+      `/${genres.find(genre => genre.name === event.target.value).name}`
     );
   }
 
   render() {
     return (
-      <Select onChange={event => this.handleSelect(event)}>
+      <Select
+        onChange={event => this.handleSelect(event)}
+        value={this.props.genre.name}>
         {genres.map(genre => {
           const {name} = genre;
 
@@ -53,7 +56,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(GenreSelector);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(GenreSelector)
+);

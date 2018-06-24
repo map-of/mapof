@@ -13,7 +13,7 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case SET_GENRE:
-      return action.payload;
+      return {...state, genre: action.payload};
 
     default:
       return state;

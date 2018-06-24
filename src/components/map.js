@@ -5,13 +5,13 @@ import {connect} from 'react-redux';
 import styled from 'styled-components';
 import mapboxgl from 'mapbox-gl';
 
-import {fetchArtists} from '../ducks/artists';
+import {setGenre as setGenreAction} from '../ducks/settings';
+import {fetchArtists as fetchArtistsAction} from '../ducks/artists';
+import genres from '../constants/genres';
 
 import Popup from './popup';
 
 import mapStyle from '../config/map-style.json';
-
-import genres from '../constants/genres';
 
 const MapContainer = styled.div`
   width: 100vw;
@@ -21,20 +21,29 @@ const MapContainer = styled.div`
 class Map extends Component {
   constructor() {
     super();
-    this.state = {map: null, mapInitialized: false};
+    this.state = {map: null, mapInitialized: false, dataLayerLoaded: false};
   }
 
   componentDidMount() {
-    this.props.dispatch(fetchArtists('techno'));
     this.tooltipContainer = document.createElement('div');
+
+    if (this.props.match.params.genre) {
+      this.props.setGenre(
+        genres.find(genre => genre.name === this.props.match.params.genre)
+      );
+    } else {
+      this.props.fetchArtists(this.props.genre.name);
+    }
   }
 
-  componentDidUpdate() {
-    if (
-      this.state.map &&
-      this.state.map.getSource('artists') &&
-      this.props.artists
-    ) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.genre !== this.props.match.params.genre) {
+      this.props.setGenre(
+        genres.find(genre => genre.name === this.props.match.params.genre)
+      );
+    }
+
+    if (this.state.map && this.state.dataLayerLoaded && this.props.artists) {
       const artists = {
         type: 'FeatureCollection',
         features: this.props.artists.map(artist => {
@@ -92,35 +101,11 @@ class Map extends Component {
     }, []);
     dataDrivenColors.push(defaultCircleColor);
 
-    console.log(dataDrivenColors);
-
     const map = new mapboxgl.Map({
       container,
       style: mapStyle,
       center: [10, 53],
       zoom: 2
-    });
-
-    map.on('load', () => {
-      map.addLayer({
-        id: 'artists',
-        type: 'circle',
-        source: {
-          type: 'geojson',
-          data: null
-        },
-        paint: {
-          'circle-color': ['match', ['get', 'genre'], ...dataDrivenColors],
-          'circle-radius': 5,
-          'circle-stroke-width': 5,
-          'circle-stroke-color': [
-            'match',
-            ['get', 'genre'],
-            ...dataDrivenColors
-          ],
-          'circle-stroke-opacity': 0.5
-        }
-      });
     });
 
     map.on('click', 'artists', event => {
@@ -150,6 +135,30 @@ class Map extends Component {
       map.getCanvas().style.cursor = '';
     });
 
+    map.on('load', () => {
+      map.addLayer({
+        id: 'artists',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: null
+        },
+        paint: {
+          'circle-color': ['match', ['get', 'genre'], ...dataDrivenColors],
+          'circle-radius': 5,
+          'circle-stroke-width': 5,
+          'circle-stroke-color': [
+            'match',
+            ['get', 'genre'],
+            ...dataDrivenColors
+          ],
+          'circle-stroke-opacity': 0.5
+        }
+      });
+
+      this.setState({dataLayerLoaded: true});
+    });
+
     this.setState({map, mapInitialized: true});
   }
 
@@ -160,8 +169,19 @@ class Map extends Component {
 
 function mapStateToProps(state) {
   return {
-    artists: state.artists
+    artists: state.artists,
+    genre: state.settings.genre
   };
 }
 
-export default connect(mapStateToProps)(Map);
+function mapDispatchToProps(dispatch) {
+  return {
+    setGenre: genre => dispatch(setGenreAction(genre)),
+    fetchArtists: genre => dispatch(fetchArtistsAction(genre))
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Map);
