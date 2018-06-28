@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "mapbox-gl": "^0.45.0",
+    "md5": "^2.2.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-player": "^1.6.4",
