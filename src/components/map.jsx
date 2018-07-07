@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
+import {Link} from 'react-router-dom';
 
 import {connect} from 'react-redux';
 import styled from 'styled-components';
@@ -18,6 +19,27 @@ const MapContainer = styled.div`
   height: 100vh;
 `;
 
+const MapCanvas = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const SubmitCtaButton = styled(Link)`
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: ${props => props.color};
+  color: #ffffff;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  padding: 0 40px;
+  transition: background 150ms ease-in-out;
+`;
+
 class Map extends Component {
   constructor() {
     super();
@@ -27,9 +49,9 @@ class Map extends Component {
   componentDidMount() {
     this.tooltipContainer = document.createElement('div');
 
-    if (this.props.match.params.genre) {
+    if (this.props.urlGenre) {
       this.props.setGenre(
-        genres.find(genre => genre.name === this.props.match.params.genre)
+        genres.find(genre => genre.name === this.props.urlGenre)
       );
     } else {
       this.props.fetchArtists(this.props.genre.name);
@@ -37,9 +59,13 @@ class Map extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.match.params.genre !== this.props.match.params.genre) {
+    if (
+      this.props.urlGenre &&
+      prevProps.urlGenre !== this.props.urlGenre &&
+      this.props.urlGenre !== this.props.genre.name
+    ) {
       this.props.setGenre(
-        genres.find(genre => genre.name === this.props.match.params.genre)
+        genres.find(genre => genre.name === this.props.urlGenre)
       );
     }
 
@@ -72,6 +98,7 @@ class Map extends Component {
               status,
               name,
               city,
+              color: genres.find(g => g.name === genre).color,
               genre,
               info,
               wikipedia,
@@ -91,15 +118,6 @@ class Map extends Component {
     if (!container || this.state.mapInitialized) {
       return;
     }
-
-    const defaultCircleColor = '#ccc';
-    const dataDrivenColors = genres.reduce((genreNamesAndColors, genre) => {
-      genreNamesAndColors.push(genre.name);
-      genreNamesAndColors.push(genre.color);
-
-      return genreNamesAndColors;
-    }, []);
-    dataDrivenColors.push(defaultCircleColor);
 
     const map = new mapboxgl.Map({
       container,
@@ -144,15 +162,11 @@ class Map extends Component {
           data: null
         },
         paint: {
-          'circle-color': ['match', ['get', 'genre'], ...dataDrivenColors],
-          'circle-radius': 5,
-          'circle-stroke-width': 5,
-          'circle-stroke-color': [
-            'match',
-            ['get', 'genre'],
-            ...dataDrivenColors
-          ],
-          'circle-stroke-opacity': 0.5
+          'circle-color': ['get', 'color'],
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 5, 12, 10],
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-opacity': 1
         }
       });
 
@@ -163,7 +177,14 @@ class Map extends Component {
   }
 
   render() {
-    return <MapContainer innerRef={div => this.initMap(div)} />;
+    return (
+      <MapContainer>
+        <MapCanvas innerRef={div => this.initMap(div)} />
+        <SubmitCtaButton to="/submit" color={this.props.genre.color}>
+          Submit new Artist
+        </SubmitCtaButton>
+      </MapContainer>
+    );
   }
 }
 
