@@ -79,11 +79,12 @@ class Map extends Component {
             name,
             lat,
             lng,
-            city,
+            locationName,
             genre,
-            info,
-            wikipedia,
-            soundcloud,
+            subgenre,
+            description,
+            infoLink,
+            mediaLink,
             user,
             timestamp
           } = artist;
@@ -97,12 +98,13 @@ class Map extends Component {
               id,
               status,
               name,
-              city,
+              locationName,
               color: genres.find(g => g.name === genre).color,
               genre,
-              info,
-              wikipedia,
-              soundcloud,
+              subgenre,
+              description,
+              infoLink,
+              mediaLink,
               user,
               timestamp
             }
@@ -181,7 +183,7 @@ class Map extends Component {
       <MapContainer>
         <MapCanvas innerRef={div => this.initMap(div)} />
         <SubmitCtaButton to="/submit" color={this.props.genre.color}>
-          Submit new Artist
+          Submit new artist
         </SubmitCtaButton>
       </MapContainer>
     );

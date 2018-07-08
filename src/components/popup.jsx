@@ -80,9 +80,9 @@ export default class Popup extends Component {
           <Name>{this.props.artist.properties.name}</Name>
           {this.state.summary && <Summary>{this.state.summary}</Summary>}
         </Info>
-        {this.props.artist.properties.soundcloud && (
+        {this.props.artist.properties.mediaLink && (
           <Player>
-            <ReactPlayer url={this.props.artist.properties.soundcloud} />
+            <ReactPlayer url={this.props.artist.properties.mediaLink} />
           </Player>
         )}
       </Container>

@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
 import styled from 'styled-components';
 
 import {setGenre as setGenreAction} from '../../ducks/settings';
+import {
+  updateSubmit as updateSubmitAction,
+  submitArtist as submitArtistAction
+} from '../../ducks/submit';
 
 import GenreSelector from '../genre-selector';
 
@@ -40,6 +45,10 @@ const Name = styled.input`
   width: 100%;
 `;
 
+const Location = styled.input`
+  width: 100%;
+`;
+
 const Description = styled.input`
   width: 100%;
 `;
@@ -49,6 +58,10 @@ const InfoUrl = styled.input`
 `;
 
 const MediaUrl = styled.input`
+  width: 100%;
+`;
+
+const User = styled.input`
   width: 100%;
 `;
 
@@ -67,32 +80,108 @@ const SubmitButton = styled.button`
 `;
 
 export class Submit extends Component {
+  componentDidMount() {
+    // eslint-disable-next-line
+    const autocomplete = new kt.OsmNamesAutocomplete(
+      'autocomplete',
+      'https://geocoder.tilehosting.com/',
+      'sg3YTg5zBN0fMMNWkmDR'
+    );
+    autocomplete.registerCallback(result => this.handleGeocodeResult(result));
+  }
+
+  handleGeocodeResult(result) {
+    const {name, lon, lat} = result;
+
+    if (!name || !lon || !lat) {
+      console.log('no good result');
+      return;
+    }
+
+    this.props.updateSubmit({
+      name: 'locationName',
+      data: name
+    });
+    this.props.updateSubmit({
+      name: 'coordinates',
+      data: {lat, lng: lon}
+    });
+  }
+
+  handleInput(event) {
+    const {target} = event;
+
+    this.props.updateSubmit({
+      name: target.name,
+      data: target.value
+    });
+  }
+
   render() {
+    const {submit} = this.props;
+
     return (
       <Container>
         <Content>
           <Header background={this.props.genre.color}>Submit new artist</Header>
           <Body>
-            <Name placeholder="Name of the artist" type="text" name="name" />
+            <Name
+              onInput={event => this.handleInput(event)}
+              placeholder="Name of the artist"
+              autocomplete="off"
+              type="text"
+              name="name"
+              value={submit.name}
+            />
+            <Location
+              onInput={event => this.handleInput(event)}
+              placeholder="Location of the artist"
+              id="autocomplete"
+              autocomplete="off"
+              type="text"
+              name="locationName"
+              value={submit.locationName}
+            />
             <GenreSelector onChange={genre => this.props.setGenre(genre)} />
             <InfoUrl
-              placeholder="Link about the artist"
+              onInput={event => this.handleInput(event)}
+              placeholder="Info link about the artist"
+              autocomplete="off"
               type="text"
-              name="info"
+              name="infoLink"
+              value={submit.infoLink}
             />
             <Description
-              placeholder="Description text (optional)"
+              onInput={event => this.handleInput(event)}
+              placeholder="Description (optional)"
+              autocomplete="off"
               type="text"
               name="description"
+              value={submit.description}
             />
             <MediaUrl
-              placeholder="Link from Soundcloud, Mixcloud or Youtube"
+              onInput={event => this.handleInput(event)}
+              placeholder="Music link from Soundcloud, Mixcloud or Youtube"
+              autocomplete="off"
               type="text"
-              name="media"
+              name="mediaLink"
+              value={submit.mediaLink}
+            />
+            <User
+              onInput={event => this.handleInput(event)}
+              placeholder="Your name (optional)"
+              autocomplete="off"
+              type="text"
+              name="user"
+              value={submit.user}
             />
             <ButtonsContainer>
-              <CancelButton>Cancel</CancelButton>
-              <SubmitButton background={this.props.genre.color}>
+              <CancelButton onClick={() => this.props.history.goBack()}>
+                Cancel
+              </CancelButton>
+              <SubmitButton
+                background={this.props.genre.color}
+                onClick={() => this.props.submitArtist(this.props.history)}>
                 Submit artist
               </SubmitButton>
             </ButtonsContainer>
@@ -103,15 +192,20 @@ export class Submit extends Component {
   }
 }
 
-const mapStateToProps = ({settings}) => ({
-  genre: settings.genre
+const mapStateToProps = ({settings, submit}) => ({
+  genre: settings.genre,
+  submit
 });
 
 const mapDispatchToProps = dispatch => ({
-  setGenre: genre => dispatch(setGenreAction(genre))
+  setGenre: genre => dispatch(setGenreAction(genre)),
+  updateSubmit: data => dispatch(updateSubmitAction(data)),
+  submitArtist: history => dispatch(submitArtistAction(history))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Submit);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Submit)
+);

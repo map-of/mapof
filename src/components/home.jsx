@@ -37,7 +37,7 @@ class Home extends Component {
 
         <GenreSelectContainer>
           <GenreSelector
-            onChange={genre => this.props.history.push(`/${genre.name}`)}
+            onChange={g => this.props.history.push(`/${g.name}`)}
           />
         </GenreSelectContainer>
 
