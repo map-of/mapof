@@ -70,6 +70,49 @@ class Map extends Component {
     }
 
     if (this.state.map && this.state.dataLayerLoaded && this.props.artists) {
+      // HACK START for distributing point with same location.
+      const reducedPositions = this.props.artists.reduce(
+        (positionCount, item) => {
+          positionCount[`${item.lat}-${item.lng}`] =
+            positionCount[`${item.lat}-${item.lng}`] || [];
+          positionCount[`${item.lat}-${item.lng}`].push(item);
+
+          return positionCount;
+        },
+        {}
+      );
+
+      // https://gis.stackexchange.com/questions/25877/generating-random-locations-nearby
+      const getRandomPointInCircle = (lat, lng, radiusInMeter) => {
+        const r = radiusInMeter / 111300;
+        const y0 = lat;
+        const x0 = lng;
+        const u = Math.random();
+        const v = Math.random();
+        const w = r * Math.sqrt(u);
+        const t = 2 * Math.PI * v;
+        const x = w * Math.cos(t);
+        const y1 = w * Math.sin(t);
+        const x1 = x / Math.cos(y0);
+
+        return {lat: y0 + y1, lng: x0 + x1};
+      };
+
+      Object.entries(reducedPositions)
+        .filter(item => item[1].length > 1)
+        .forEach(item => {
+          item[1].forEach(artist => {
+            const {lat, lng} = getRandomPointInCircle(
+              artist.lat,
+              artist.lng,
+              100
+            );
+            artist.lat = lat;
+            artist.lng = lng;
+          });
+        });
+      // HACK END
+
       const artists = {
         type: 'FeatureCollection',
         features: this.props.artists.map(artist => {
@@ -112,7 +155,12 @@ class Map extends Component {
         })
       };
 
-      this.state.map.getSource('artists').setData(artists);
+      this.state.map.getSource('artists-source').setData(artists);
+      this.state.map.setPaintProperty(
+        'artists-cluster-layer',
+        'circle-color',
+        this.props.genre.color
+      );
     }
   }
 
@@ -128,7 +176,7 @@ class Map extends Component {
       zoom: 2
     });
 
-    map.on('click', 'artists', event => {
+    map.on('click', 'artists-layer', event => {
       const artist = event.features[0];
       const coordinates = artist.geometry.coordinates.slice();
 
@@ -147,28 +195,68 @@ class Map extends Component {
         .addTo(map);
     });
 
-    map.on('mouseenter', 'artists', () => {
+    map.on('mouseenter', 'artists-layer', () => {
       map.getCanvas().style.cursor = 'pointer';
     });
 
-    map.on('mouseleave', 'artists', () => {
+    map.on('mouseleave', 'artists-layer', () => {
       map.getCanvas().style.cursor = '';
     });
 
     map.on('load', () => {
+      map.addSource('artists-source', {
+        type: 'geojson',
+        data: null,
+        cluster: true
+      });
+
       map.addLayer({
-        id: 'artists',
+        id: 'artists-cluster-layer',
         type: 'circle',
-        source: {
-          type: 'geojson',
-          data: null
-        },
+        source: 'artists-source',
+        filter: ['==', 'cluster', true],
+        paint: {
+          'circle-color': this.props.genre.color,
+          'circle-radius': [
+            'interpolate',
+            ['linear'],
+            ['get', 'point_count'],
+            10,
+            15,
+            100,
+            50
+          ],
+          'circle-stroke-width': 3,
+          'circle-stroke-color': '#ffffff'
+        }
+      });
+
+      map.addLayer({
+        id: 'artists-layer',
+        type: 'circle',
+        source: 'artists-source',
+        filter: ['!=', 'cluster', true],
         paint: {
           'circle-color': ['get', 'color'],
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 5, 12, 10],
           'circle-stroke-width': 1,
           'circle-stroke-color': '#ffffff',
           'circle-stroke-opacity': 1
+        }
+      });
+
+      map.addLayer({
+        id: 'cluster-count',
+        type: 'symbol',
+        source: 'artists-source',
+        filter: ['==', 'cluster', true],
+        layout: {
+          'text-field': '{point_count_abbreviated}',
+          'text-font': ['Noto Sans'],
+          'text-size': 12
+        },
+        paint: {
+          'text-color': '#ffffff'
         }
       });
 
