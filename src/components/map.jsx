@@ -226,7 +226,7 @@ class Map extends Component {
             100,
             50
           ],
-          'circle-stroke-width': 3,
+          'circle-stroke-width': 2,
           'circle-stroke-color': '#ffffff'
         }
       });
