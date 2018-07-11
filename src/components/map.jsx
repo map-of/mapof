@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {Link} from 'react-router-dom';
-
 import {connect} from 'react-redux';
 import styled from 'styled-components';
 import mapboxgl from 'mapbox-gl';
+import seedrandom from 'seedrandom';
 
 import {setGenre as setGenreAction} from '../ducks/settings';
 import {fetchArtists as fetchArtistsAction} from '../ducks/artists';
@@ -83,12 +83,15 @@ class Map extends Component {
       );
 
       // https://gis.stackexchange.com/questions/25877/generating-random-locations-nearby
-      const getRandomPointInCircle = (lat, lng, radiusInMeter) => {
+      const getRandomPointInCircle = (id, lat, lng, radiusInMeter) => {
+        const randomForLat = seedrandom(`${id}-lat`);
+        const randomForLng = seedrandom(`${id}-lng`);
+
         const r = radiusInMeter / 111300;
         const y0 = lat;
         const x0 = lng;
-        const u = Math.random();
-        const v = Math.random();
+        const u = randomForLat();
+        const v = randomForLng();
         const w = r * Math.sqrt(u);
         const t = 2 * Math.PI * v;
         const x = w * Math.cos(t);
@@ -103,6 +106,7 @@ class Map extends Component {
         .forEach(item => {
           item[1].forEach(artist => {
             const {lat, lng} = getRandomPointInCircle(
+              artist.id,
               artist.lat,
               artist.lng,
               100
