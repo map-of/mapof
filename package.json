@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "mapbox-gl": "^0.46.0",
+    "mapbox-gl": "^0.47.0-beta.1",
     "md5": "^2.2.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -16,7 +16,7 @@
     "redux-saga": "^0.16.0",
     "seedrandom": "^2.4.3",
     "styled-components": "^3.3.3",
-    "wikijs": "^4.8.0"
+    "wikijs": "^4.8.1"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -109,7 +109,7 @@ class Map extends Component {
               artist.id,
               artist.lat,
               artist.lng,
-              100
+              1000
             );
             artist.lat = lat;
             artist.lng = lng;
@@ -199,6 +199,26 @@ class Map extends Component {
         .addTo(map);
     });
 
+    map.on('click', 'artists-cluster-layer', ({features}) => {
+      const feature = features[0];
+      map
+        .getSource('artists-source')
+        .getClusterExpansionZoom(
+          feature.properties.cluster_id,
+          (error, zoom) => {
+            if (error) {
+              console.log(error);
+              return;
+            }
+
+            map.easeTo({
+              center: feature.geometry.coordinates,
+              zoom: zoom + 1
+            });
+          }
+        );
+    });
+
     map.on('mouseenter', 'artists-layer', () => {
       map.getCanvas().style.cursor = 'pointer';
     });
@@ -207,11 +227,20 @@ class Map extends Component {
       map.getCanvas().style.cursor = '';
     });
 
+    map.on('mouseenter', 'artists-cluster-layer', () => {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+
+    map.on('mouseleave', 'artists-cluster-layer', () => {
+      map.getCanvas().style.cursor = '';
+    });
+
     map.on('load', () => {
       map.addSource('artists-source', {
         type: 'geojson',
         data: null,
-        cluster: true
+        cluster: true,
+        clusterMaxZoom: 11
       });
 
       map.addLayer({
