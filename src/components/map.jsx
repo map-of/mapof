@@ -240,6 +240,7 @@ class Map extends Component {
         type: 'geojson',
         data: null,
         cluster: true,
+        clusterRadius: 30,
         clusterMaxZoom: 11
       });
 

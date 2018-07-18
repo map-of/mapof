@@ -61,6 +61,22 @@ const MediaUrl = styled.input`
   width: 100%;
 `;
 
+const FacebookUrl = styled.input`
+  width: 100%;
+`;
+
+const InstagramUrl = styled.input`
+  width: 100%;
+`;
+
+const TwitterUrl = styled.input`
+  width: 100%;
+`;
+
+const WebsiteUrl = styled.input`
+  width: 100%;
+`;
+
 const User = styled.input`
   width: 100%;
 `;
@@ -145,7 +161,7 @@ export class Submit extends Component {
             <GenreSelector onChange={genre => this.props.setGenre(genre)} />
             <InfoUrl
               onInput={event => this.handleInput(event)}
-              placeholder="Info link about the artist"
+              placeholder="Info link (Discogs or Wikipedia)"
               autocomplete="off"
               type="text"
               name="infoLink"
@@ -166,6 +182,38 @@ export class Submit extends Component {
               type="text"
               name="mediaLink"
               value={submit.mediaLink}
+            />
+            <FacebookUrl
+              onInput={event => this.handleInput(event)}
+              placeholder="Facebook link (optional)"
+              autocomplete="off"
+              type="text"
+              name="facebookLink"
+              value={submit.facebookLink}
+            />
+            <InstagramUrl
+              onInput={event => this.handleInput(event)}
+              placeholder="Instagram link (optional)"
+              autocomplete="off"
+              type="text"
+              name="instagramLink"
+              value={submit.instagramLink}
+            />
+            <TwitterUrl
+              onInput={event => this.handleInput(event)}
+              placeholder="Twitter link (optional)"
+              autocomplete="off"
+              type="text"
+              name="twitterLink"
+              value={submit.twitterLink}
+            />
+            <WebsiteUrl
+              onInput={event => this.handleInput(event)}
+              placeholder="Website link (optional)"
+              autocomplete="off"
+              type="text"
+              name="websiteLink"
+              value={submit.websiteLink}
             />
             <User
               onInput={event => this.handleInput(event)}

@@ -13,6 +13,10 @@ const initialState = {
   infoLink: '',
   description: '',
   mediaLink: '',
+  facebookLink: '',
+  instagramLink: '',
+  twitterLink: '',
+  websiteLink: '',
   user: '',
   coordinates: {lat: null, lng: null}
 };
@@ -86,6 +90,10 @@ function* submitArtistWorker({payload}) {
       infoLink: artist.infoLink,
       description: artist.description,
       mediaLink: artist.mediaLink,
+      facebookLink: artist.facebookLink,
+      instagramLink: artist.instagramLink,
+      twitterLink: artist.twitterLink,
+      websiteLink: artist.websiteLink,
       user: artist.user
     };
 
