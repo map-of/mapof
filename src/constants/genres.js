@@ -1,5 +1,6 @@
 export default [
   {name: 'techno', color: '#BD10E0'},
+  {name: 'elektro', color: '#43a047'},
   {name: 'metal', color: '#7dd322'},
   {name: 'rap', color: '#ff8a65'},
   {name: 'ambient', color: '#ffd54f'},
