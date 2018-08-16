@@ -8,5 +8,6 @@ export default [
   {name: 'elektropunk', color: '#00b0ff'},
   {name: 'house', color: '#4dd0e1'},
   {name: 'rock', color: '#f06292'},
-  {name: 'trance', color: '#81c784'}
+  {name: 'trance', color: '#81c784'},
+  {name: 'indie', color: '#f44336'}
 ];
