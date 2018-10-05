@@ -7,7 +7,7 @@ import createSagaMiddleware from 'redux-saga';
 import md5 from 'md5';
 
 import initGlobalStyles from './global-styles/index';
-import registerServiceWorker from './registerServiceWorker';
+import {unregister} from './registerServiceWorker';
 
 import reducers from './ducks/index';
 import sagas from './ducks/sagas';
@@ -41,5 +41,5 @@ if (auth) {
     document.getElementById('root')
   );
 
-  registerServiceWorker();
+  unregister();
 }
