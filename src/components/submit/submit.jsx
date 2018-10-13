@@ -41,44 +41,11 @@ const Body = styled.div`
   padding: 40px 30px;
 `;
 
-const Name = styled.input`
+const Input = styled.input`
   width: 100%;
-`;
-
-const Location = styled.input`
-  width: 100%;
-`;
-
-const Description = styled.input`
-  width: 100%;
-`;
-
-const InfoUrl = styled.input`
-  width: 100%;
-`;
-
-const MediaUrl = styled.input`
-  width: 100%;
-`;
-
-const FacebookUrl = styled.input`
-  width: 100%;
-`;
-
-const InstagramUrl = styled.input`
-  width: 100%;
-`;
-
-const TwitterUrl = styled.input`
-  width: 100%;
-`;
-
-const WebsiteUrl = styled.input`
-  width: 100%;
-`;
-
-const User = styled.input`
-  width: 100%;
+  margin: 8px 0;
+  height: 40px;
+  border: 1px solid ${props => (props.error ? 'red' : 'grey')};
 `;
 
 const ButtonsContainer = styled.div`
@@ -135,22 +102,25 @@ export class Submit extends Component {
 
   render() {
     const {submit} = this.props;
+    const {errors} = submit;
 
     return (
       <Container>
         <Content>
           <Header background={this.props.genre.color}>Submit new artist</Header>
           <Body>
-            <Name
-              onInput={event => this.handleInput(event)}
+            <Input
+              error={errors.name}
+              onChange={event => this.handleInput(event)}
               placeholder="Name of the artist"
               autocomplete="off"
               type="text"
               name="name"
               value={submit.name}
             />
-            <Location
-              onInput={event => this.handleInput(event)}
+            <Input
+              error={errors.locationName}
+              onChange={event => this.handleInput(event)}
               placeholder="Location of the artist"
               id="autocomplete"
               autocomplete="off"
@@ -159,64 +129,66 @@ export class Submit extends Component {
               value={submit.locationName}
             />
             <GenreSelector onChange={genre => this.props.setGenre(genre)} />
-            <InfoUrl
-              onInput={event => this.handleInput(event)}
+            <Input
+              error={errors.infoLink}
+              onChange={event => this.handleInput(event)}
               placeholder="Info link (Discogs or Wikipedia)"
               autocomplete="off"
               type="text"
               name="infoLink"
               value={submit.infoLink}
             />
-            <Description
-              onInput={event => this.handleInput(event)}
+            <Input
+              onChange={event => this.handleInput(event)}
               placeholder="Description (optional)"
               autocomplete="off"
               type="text"
               name="description"
               value={submit.description}
             />
-            <MediaUrl
-              onInput={event => this.handleInput(event)}
+            <Input
+              error={errors.mediaLink}
+              onChange={event => this.handleInput(event)}
               placeholder="Music link from Soundcloud, Mixcloud or Youtube"
               autocomplete="off"
               type="text"
               name="mediaLink"
               value={submit.mediaLink}
             />
-            <FacebookUrl
-              onInput={event => this.handleInput(event)}
+            <Input
+              onChange={event => this.handleInput(event)}
               placeholder="Facebook link (optional)"
               autocomplete="off"
               type="text"
               name="facebookLink"
               value={submit.facebookLink}
             />
-            <InstagramUrl
-              onInput={event => this.handleInput(event)}
+            <Input
+              onChange={event => this.handleInput(event)}
               placeholder="Instagram link (optional)"
               autocomplete="off"
               type="text"
               name="instagramLink"
               value={submit.instagramLink}
             />
-            <TwitterUrl
-              onInput={event => this.handleInput(event)}
+            <Input
+              onChange={event => this.handleInput(event)}
               placeholder="Twitter link (optional)"
               autocomplete="off"
               type="text"
               name="twitterLink"
               value={submit.twitterLink}
             />
-            <WebsiteUrl
-              onInput={event => this.handleInput(event)}
+            <Input
+              onChange={event => this.handleInput(event)}
               placeholder="Website link (optional)"
               autocomplete="off"
               type="text"
               name="websiteLink"
               value={submit.websiteLink}
             />
-            <User
-              onInput={event => this.handleInput(event)}
+            <Input
+              onChange={event => this.handleInput(event)}
               placeholder="Your name (optional)"
               autocomplete="off"
               type="text"

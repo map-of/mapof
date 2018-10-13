@@ -6,6 +6,7 @@ export const UPDATE_SUBMIT = 'UPDATE_SUBMIT';
 export const SUBMIT_ARTIST = 'SUBMIT_ARTIST';
 export const SUBMIT_ARTIST_SUCCESS = 'SUBMIT_ARTIST_SUCCESS';
 export const SUBMIT_ARTIST_ERROR = 'SUBMIT_ARTIST_ERROR';
+export const SUBMIT_MISSING_FIELD = 'SUBMIT_MISSING_FIELD';
 
 const initialState = {
   name: '',
@@ -18,16 +19,24 @@ const initialState = {
   twitterLink: '',
   websiteLink: '',
   user: '',
-  coordinates: {lat: null, lng: null}
+  coordinates: {lat: null, lng: null},
+  errors: {}
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
     case UPDATE_SUBMIT:
-      return {...state, [action.payload.name]: action.payload.data};
+      return {
+        ...state,
+        [action.payload.name]: action.payload.data,
+        errors: {...state.errors, [action.payload.name]: false}
+      };
 
     case SUBMIT_ARTIST_SUCCESS:
       return initialState;
+
+    case SUBMIT_MISSING_FIELD:
+      return {...state, errors: action.payload};
 
     default:
       return state;
@@ -54,11 +63,16 @@ export function submitArtistSuccess() {
   };
 }
 
-export function submitArtistError(error) {
-  console.log(error);
-
+export function submitArtistError() {
   return {
     type: SUBMIT_ARTIST_ERROR
+  };
+}
+
+export function submitMissingField(errors) {
+  return {
+    type: SUBMIT_MISSING_FIELD,
+    payload: errors
   };
 }
 
@@ -73,12 +87,24 @@ function* submitArtistWorker({payload}) {
     if (
       !artist.name ||
       !genre ||
+      !artist.infoLink ||
       !artist.locationName ||
       !artist.mediaLink ||
       !artist.coordinates.lat ||
       !artist.coordinates.lng
     ) {
-      throw new Error('Missing paramters');
+      yield put(
+        submitMissingField({
+          name: Boolean(!artist.name),
+          locationName: Boolean(!artist.locationName),
+          infoLink: Boolean(!artist.infoLink),
+          mediaLink: Boolean(!artist.mediaLink),
+          lat: Boolean(!artist.coordinates.lat),
+          lng: Boolean(!artist.coordinates.lng)
+        })
+      );
+
+      return;
     }
 
     const finalArtist = {
@@ -101,7 +127,7 @@ function* submitArtistWorker({payload}) {
     payload.history.goBack();
     yield put(submitArtistSuccess());
   } catch (error) {
-    yield put(submitArtistError(error));
+    yield put(submitArtistError());
   }
 }
 

@@ -1,5 +1,10 @@
 import {FETCH_ARTISTS, FETCH_ARTISTS_SUCCESS} from './artists';
-import {SUBMIT_ARTIST, SUBMIT_ARTIST_SUCCESS} from './submit';
+import {
+  SUBMIT_ARTIST,
+  SUBMIT_ARTIST_SUCCESS,
+  SUBMIT_ARTIST_ERROR,
+  SUBMIT_MISSING_FIELD
+} from './submit';
 
 const initialState = false;
 
@@ -11,6 +16,8 @@ export default function(state = initialState, action) {
 
     case FETCH_ARTISTS_SUCCESS:
     case SUBMIT_ARTIST_SUCCESS:
+    case SUBMIT_ARTIST_ERROR:
+    case SUBMIT_MISSING_FIELD:
       return false;
 
     default:
