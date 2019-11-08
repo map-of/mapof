@@ -12,8 +12,6 @@ import genres from '../constants/genres';
 
 import Popup from './popup';
 
-import mapStyle from '../config/map-style.json';
-
 const MapContainer = styled.div`
   width: 100vw;
   height: 100vh;
@@ -175,7 +173,8 @@ class Map extends Component {
 
     const map = new mapboxgl.Map({
       container,
-      style: mapStyle,
+      style:
+        'https://api.maptiler.com/maps/282ae141-c9ab-43f2-b50b-968d6a14e0c2/style.json?key=fAfiGgsqgM3aYgJyY7wC',
       center: [10, 53],
       zoom: 2
     });
