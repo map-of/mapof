@@ -15,9 +15,12 @@
   "rules": {
     "comma-dangle": 2,
     "no-cond-assign": [2, "except-parens"],
-    "no-console": [1, {
-      "allow": ["warn", "error"]
-    }],
+    "no-console": [
+      1,
+      {
+        "allow": ["warn", "error"]
+      }
+    ],
     "no-constant-condition": 2,
     "no-control-regex": 2,
     "no-debugger": 2,
@@ -242,9 +245,12 @@
         "asyncArrow": "always"
       }
     ],
-    "keyword-spacing": ["error", {
-      "after": true
-    }],
+    "keyword-spacing": [
+      "error",
+      {
+        "after": true
+      }
+    ],
     "space-before-blocks": [2, "always"],
     "space-in-parens": [2, "never"],
     "space-infix-ops": 2,
@@ -300,9 +306,12 @@
         "allowUnboundThis": false
       }
     ],
-    "prefer-const": [2, {
-      "destructuring": "all"
-    }],
+    "prefer-const": [
+      2,
+      {
+        "destructuring": "all"
+      }
+    ],
     "prefer-reflect": 0,
     "prefer-rest-params": 1,
     "prefer-spread": 1,
