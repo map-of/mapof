@@ -9,21 +9,15 @@ const Home = styled.div`
 `;
 
 function HomePage() {
+  // const {data} = useGlobalState();
+
   return (
     <Home>
-      <Link href="/[genre]/[region]" as="/rap/berlin">
+      {/* <Link href="/[genre]/[region]" as="/rap/berlin">
         <a>cooooolio</a>
-      </Link>
+      </Link> */}
     </Home>
   );
 }
-
-// HomePage.getInitialProps = async () => {
-//   console.log("hooome");
-//   const lol = await fetch("https://jsonplaceholder.typicode.com/todos/1");
-//   const lol2 = (await lol.json()).title;
-
-//   return { stars: lol2 };
-// };
 
 export default HomePage;

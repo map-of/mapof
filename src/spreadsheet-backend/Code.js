@@ -4,26 +4,26 @@ var document = SpreadsheetApp.openById(
 
 // var allGenres = getAllGenres();
 
-// function getAllGenres() {
-//   var sheet = document.getSheetByName(
-//     "genres (nein das funktioniert noch nicht :D)"
-//   );
-//   var range = sheet.getDataRange();
-//   var data = range.getValues();
-//   var headings = data[0];
-//   const genres = [];
+function getAllGenres() {
+  var sheet = document.getSheetByName(
+    'genres (nein das funktioniert noch nicht :D)'
+  );
+  var range = sheet.getDataRange();
+  var data = range.getValues();
+  var headings = data[0];
+  const genres = [];
 
-//   for (var i = 1; i < data.length; i++) {
-//     var genre = {};
-//     for (var j = 0; j < headings.length; j++) {
-//       genre[headings[j].toString()] = data[i][j];
-//     }
+  for (var i = 1; i < data.length; i++) {
+    var genre = {};
+    for (var j = 0; j < headings.length; j++) {
+      genre[headings[j].toString()] = data[i][j];
+    }
 
-//     genres.push(genre);
-//   }
+    genres.push(genre);
+  }
 
-//   return genres;
-// }
+  return genres;
+}
 
 function ChunkyCache(cache, chunkSize) {
   return {
@@ -136,9 +136,12 @@ function getData() {
 function doGet(request) {
   if (request.parameter.genre !== undefined) {
     var genre = request.parameter.genre;
-    var artists = genre === 'all' ? getData() : genreQuery(genre);
+    var artists =
+      genre === 'all'
+        ? {data: getData(), genres: getAllGenres()}
+        : genreQuery(genre);
 
-    return ContentService.createTextOutput(artists).setMimeType(
+    return ContentService.createTextOutput(JSON.stringify(artists)).setMimeType(
       ContentService.MimeType.JSON
     );
   } else {
