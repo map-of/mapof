@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "mapbox-gl": "^1.6.1",
-    "next": "^9.2.0",
+    "mapbox-gl": "^1.10.1",
+    "next": "^9.4.1",
     "node-fetch": "^2.6.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "styled-components": "^5.0.0"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "styled-components": "^5.1.0"
   },
   "scripts": {
     "dev": "next",
@@ -16,6 +16,6 @@
     "start": "next start"
   },
   "devDependencies": {
-    "@types/google-apps-script": "^1.0.10"
+    "@types/google-apps-script": "^1.0.14"
   }
 }

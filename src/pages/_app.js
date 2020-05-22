@@ -1,20 +1,20 @@
-import App from "next/app";
-import { ThemeProvider } from "styled-components";
-import { GlobalStateProvider } from "../hooks/useGlobalState";
-import Head from "next/head";
-import dynamic from "next/dynamic";
+import App from 'next/app';
+import {ThemeProvider} from 'styled-components';
+import {GlobalStateProvider} from '../hooks/useGlobalState';
+import Head from 'next/head';
+import dynamic from 'next/dynamic';
 
-const MapboxMap = dynamic(() => import("../components/MapboxMap"), {
+const MapboxMap = dynamic(() => import('../components/MapboxMap'), {
   ssr: false
 });
 
 const theme = {
   colors: {
-    primary: "#0070f3"
+    primary: '#0070f3'
   }
 };
 
-function MyApp({ Component, pageProps }) {
+function MyApp({Component, pageProps}) {
   return (
     <GlobalStateProvider>
       <ThemeProvider theme={theme}>
@@ -36,11 +36,11 @@ function MyApp({ Component, pageProps }) {
 // perform automatic static optimization, causing every page in your app to
 // be server-side rendered.
 
-MyApp.getInitialProps = async appContext => {
+MyApp.getInitialProps = async (appContext) => {
   // calls page's `getInitialProps` and fills `appProps.pageProps`
   const appProps = await App.getInitialProps(appContext);
 
-  return { ...appProps };
+  return {...appProps};
 };
 
 export default MyApp;
