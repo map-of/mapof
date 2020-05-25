@@ -45,8 +45,8 @@ function MapboxMap() {
     map.addSource('data-source', {
       type: 'geojson',
       data,
-      cluster: true,
-      clusterRadius: 30
+      cluster: true
+      // clusterRadius: 30
     });
 
     map.addLayer({
@@ -56,10 +56,8 @@ function MapboxMap() {
       filter: ['!=', 'cluster', true],
       paint: {
         'circle-color': ['get', 'color'],
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 5, 12, 10],
-        'circle-stroke-width': 1,
-        'circle-stroke-color': '#ffffff',
-        'circle-stroke-opacity': 1
+        'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 5, 12, 12],
+        'circle-opacity': 0.85
       }
     });
 
@@ -69,18 +67,17 @@ function MapboxMap() {
       source: 'data-source',
       filter: ['==', 'cluster', true],
       paint: {
-        'circle-color': 'blue',
+        'circle-color': 'deeppink',
         'circle-radius': [
           'interpolate',
           ['linear'],
           ['get', 'point_count'],
           10,
           15,
-          100,
-          50
+          200,
+          40
         ],
-        'circle-stroke-width': 2,
-        'circle-stroke-color': '#ffffff'
+        'circle-opacity': 0.85
       }
     });
 

@@ -20,6 +20,22 @@ const initialState = {
   genres: null
 };
 
+const initialState2 = {
+  mapState: {
+    bounds: [-180, -90, 180, 90]
+  },
+  data: {
+    all: null,
+    filtered: null,
+    cities: null,
+    activeFilters: []
+  },
+  genres: null,
+  infoBoxItems: null,
+  selectedInfoBoxItem: null,
+  playerItem: null
+};
+
 const globalStateReducer = (state, action) => {
   switch (action.type) {
     case SET_MAP_BOUNDS:

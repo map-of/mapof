@@ -1,6 +1,3 @@
-import {useEffect} from 'react';
-import useGlobalState from '../hooks/useGlobalState';
-import fetch from 'node-fetch';
 import styled from 'styled-components';
 import Link from 'next/link';
 
@@ -9,13 +6,11 @@ const Home = styled.div`
 `;
 
 function HomePage() {
-  // const {data} = useGlobalState();
-
   return (
     <Home>
-      {/* <Link href="/[genre]/[region]" as="/rap/berlin">
-        <a>cooooolio</a>
-      </Link> */}
+      <Link href="/[genre]" as="/rap">
+        <a>coolio</a>
+      </Link>
     </Home>
   );
 }
