@@ -1,11 +1,15 @@
 import {createContext, useReducer, useContext} from 'react';
+import produce from 'immer';
+
 import {createFeatureCollection} from '../lib/create-feature-collection';
+import {createSubgenreColors} from '../lib/create-subgenre-colors';
 
 /* Action Types */
 const SET_MAP_BOUNDS = 'SET_MAP_BOUNDS';
 const SET_DATA = 'SET_DATA';
 const SET_INFO_BOX_ITEMS = 'SET_INFO_BOX_ITEMS';
 const SET_SELECTED_INFO_BOX_ITEM = 'SET_SELECTED_INFO_BOX_ITEM';
+const SET_FILTERS = 'SET_FILTERS';
 
 /* Define a context and a reducer for updating the context */
 const GlobalStateContext = createContext();
@@ -15,60 +19,41 @@ const initialState = {
     bounds: [-180, -90, 180, 90]
   },
   data: null,
-  infoBoxItems: null,
-  selectedInfoBoxItem: null,
-  genres: null
-};
-
-const initialState2 = {
-  mapState: {
-    bounds: [-180, -90, 180, 90]
-  },
-  data: {
-    all: null,
-    filtered: null,
-    cities: null,
-    activeFilters: []
-  },
   genres: null,
+  cities: null,
+  filters: null,
   infoBoxItems: null,
   selectedInfoBoxItem: null,
   playerItem: null
 };
 
-const globalStateReducer = (state, action) => {
+const globalStateReducer = produce((draft, action) => {
   switch (action.type) {
     case SET_MAP_BOUNDS:
-      return {
-        ...state,
-        mapState: {
-          ...state.mapState,
-          bounds: action.payload
-        }
-      };
+      draft.mapState.bound = action.payload;
+      return;
 
     case SET_DATA:
-      return {
-        ...state,
-        data: action.payload
-      };
+      draft.data = action.payload;
+      return;
 
     case SET_INFO_BOX_ITEMS:
-      return {
-        ...state,
-        infoBoxItems: action.payload,
-        selectedInfoBoxItem: null
-      };
+      draft.infoBoxItems = action.payload;
+      draft.selectedInfoBoxItem = null;
+      return;
+
     case SET_SELECTED_INFO_BOX_ITEM:
-      return {
-        ...state,
-        selectedInfoBoxItem: action.payload
-      };
+      draft.selectedInfoBoxItem = action.payload;
+      return;
+
+    case SET_FILTERS:
+      draft.filters = action.payload;
+      return;
 
     default:
-      return state;
+      return;
   }
-};
+});
 
 /* Export a component to provide the context to its children. This is used in our _app.js file */
 export const GlobalStateProvider = ({children, initialData}) => {
@@ -77,7 +62,23 @@ export const GlobalStateProvider = ({children, initialData}) => {
     data: initialData?.data
       ? createFeatureCollection(initialData.data, initialData.genres)
       : initialState.data,
-    genres: initialData?.genres ?? initialState.genres
+    genres: initialData?.genres
+      ? createSubgenreColors(initialData.genres)
+      : initialState.genres,
+    cities: initialData?.data
+      ? initialData.data.reduce((acc, item) => {
+          acc[item.locationName] = acc[item.locationName] || {
+            lat: item.lat,
+            lng: item.lng,
+            type: 'city',
+            value: item.locationName.toLowerCase(),
+            label: item.locationName,
+            color: 'grey'
+          };
+
+          return acc;
+        }, {})
+      : initialData.cities
   });
 
   return (
@@ -122,16 +123,53 @@ const useGlobalState = () => {
     });
   };
 
+  const setFilters = (filters) => {
+    dispatch({
+      type: SET_FILTERS,
+      payload: filters
+    });
+  };
+
+  const filterData = (data, filters) => {
+    const genreFilters = filters
+      .filter((f) => f.type === 'genre')
+      .map((f) => f.value);
+    const cityFilters = filters
+      .filter((f) => f.type === 'city')
+      .map((f) => f.value);
+
+    return {
+      ...data,
+      features: data.features.filter((item) => {
+        return (
+          (cityFilters.includes(item.properties.locationName.toLowerCase()) ||
+            !cityFilters.length) &&
+          (genreFilters.includes(item.properties.genre) || !genreFilters.length)
+        );
+      })
+    };
+  };
+
+  const getSearchTags = () => {};
+
   return {
     data: state.data,
+    filteredData: state.filters
+      ? filterData(state.data, state.filters)
+      : state.data,
     infoBoxItems: state.infoBoxItems,
     selectedInfoBoxItem: state.selectedInfoBoxItem,
     mapState: state.mapState,
+    genres: state.genres,
+    cities: state.cities,
+    searchTags: [...state.genres, ...Object.values(state.cities)],
+    filters: state.filters,
     actions: {
       setData,
       setMapBounds,
       setInfoBoxItems,
-      setSelectedInfoBoxItem
+      setSelectedInfoBoxItem,
+      setFilters
     }
   };
 };

@@ -1,13 +1,12 @@
 import App from 'next/app';
 import {ThemeProvider} from 'styled-components';
-import Select from 'react-select';
 import {GlobalStateProvider} from '../hooks/useGlobalState';
-import {useEffect} from 'react';
 
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 
 import InfoBox from '../components/InfoBox';
+import SearchBar from '../components/SearchBar';
 
 const MapboxMap = dynamic(() => import('../components/MapboxMap'), {
   ssr: false
@@ -17,29 +16,6 @@ const theme = {
   colors: {
     primary: '#0070f3'
   }
-};
-
-const options = [
-  {value: 'techno', label: 'Techno'},
-  {value: 'rap', label: 'Rap'}
-];
-
-const customStyles = {
-  container: (provided, state) => ({
-    ...provided,
-    position: 'absolute',
-    top: '40px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    width: '400px',
-    height: '56px'
-  }),
-  control: (provided, state) => ({
-    ...provided,
-    borderRadius: '28px',
-    background: 'white',
-    height: '100%'
-  })
 };
 
 function MyApp({Component, pageProps, data, genres}) {
@@ -54,12 +30,7 @@ function MyApp({Component, pageProps, data, genres}) {
         </Head>
         <MapboxMap />
         <InfoBox />
-        <Select
-          instanceId="selector"
-          options={options}
-          styles={customStyles}
-          isMulti
-        />
+        <SearchBar />
         <Component {...pageProps} />
       </ThemeProvider>
     </GlobalStateProvider>

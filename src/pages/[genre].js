@@ -1,7 +1,7 @@
 import useGlobalState from '../hooks/useGlobalState';
 
 function Genre({genre}) {
-  return <div style={{background: 'white'}}>{genre}</div>;
+  return null;
 }
 
 export default Genre;

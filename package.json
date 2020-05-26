@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "chroma-js": "^2.1.0",
+    "immer": "^6.0.8",
     "mapbox-gl": "^1.10.1",
     "next": "^9.4.1",
     "node-fetch": "^2.6.0",

@@ -8,9 +8,9 @@ const Home = styled.div`
 function HomePage() {
   return (
     <Home>
-      <Link href="/[genre]" as="/rap">
+      {/* <Link href="/[genre]" as="/rap">
         <a>coolio</a>
-      </Link>
+      </Link> */}
     </Home>
   );
 }

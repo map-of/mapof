@@ -17,7 +17,7 @@ function Region({boundingBox}) {
     actions.setMapBounds(boundingBox);
   }, []);
 
-  return <Container>lol</Container>;
+  return null;
 }
 
 Region.getInitialProps = async ({query}) => {

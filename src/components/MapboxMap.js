@@ -21,7 +21,7 @@ function MapboxMap() {
   const [map, setMap] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  const {mapState, data, actions} = useGlobalState();
+  const {mapState, data, filteredData, actions} = useGlobalState();
   const {bounds} = mapState;
 
   // Init map
@@ -44,7 +44,7 @@ function MapboxMap() {
 
     map.addSource('data-source', {
       type: 'geojson',
-      data,
+      data: filteredData,
       cluster: true
       // clusterRadius: 30
     });
@@ -154,8 +154,13 @@ function MapboxMap() {
 
   // Update bounds
   useEffect(() => {
-    map && map.fitBounds(bounds);
+    mapLoaded && map.fitBounds(bounds);
   }, [bounds]);
+
+  // New data
+  useEffect(() => {
+    mapLoaded && map.getSource('data-source').setData(filteredData);
+  }, [filteredData]);
 
   return <Canvas ref={mapCanvas}></Canvas>;
 }
