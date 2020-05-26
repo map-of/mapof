@@ -25,7 +25,7 @@ const customStyles = {
   }),
   control: (provided, state) => ({
     ...provided,
-    borderRadius: '28px',
+    borderRadius: '3px',
     background: 'white',
     height: '100%'
   }),
