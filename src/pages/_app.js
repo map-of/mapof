@@ -8,6 +8,8 @@ import dynamic from 'next/dynamic';
 import InfoBox from '../components/InfoBox';
 import SearchBar from '../components/SearchBar';
 
+import '../styles/global.css';
+
 const MapboxMap = dynamic(() => import('../components/MapboxMap'), {
   ssr: false
 });
@@ -15,6 +17,9 @@ const MapboxMap = dynamic(() => import('../components/MapboxMap'), {
 const theme = {
   colors: {
     primary: '#0070f3'
+  },
+  font: {
+    primary: '"Montserrat", sans-serif'
   }
 };
 
@@ -25,6 +30,10 @@ function MyApp({Component, pageProps, data, genres}) {
         <Head>
           <link
             href="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css"
+            rel="stylesheet"
+          />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap"
             rel="stylesheet"
           />
         </Head>

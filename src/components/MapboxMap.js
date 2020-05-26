@@ -7,7 +7,6 @@ mapboxgl.accessToken =
   'pk.eyJ1IjoibXJtZXRhbHdvb2QiLCJhIjoiY2o1aWQ0MmNhMXR5eDJxb2R5eHowNTNjZCJ9.XKgKCOOPaRYjz9k1zMi3Ag';
 
 const Canvas = styled.div`
-  background-color: blue;
   position: absolute;
   top: 0;
   left: 0;
@@ -21,7 +20,7 @@ function MapboxMap() {
   const [map, setMap] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  const {mapState, data, filteredData, actions} = useGlobalState();
+  const {mapState, accentColor, filteredData, actions} = useGlobalState();
   const {bounds} = mapState;
 
   // Init map
@@ -57,7 +56,7 @@ function MapboxMap() {
       paint: {
         'circle-color': ['get', 'color'],
         'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 5, 12, 12],
-        'circle-opacity': 0.85
+        'circle-opacity': 0.75
       }
     });
 
@@ -67,7 +66,7 @@ function MapboxMap() {
       source: 'data-source',
       filter: ['==', 'cluster', true],
       paint: {
-        'circle-color': 'deeppink',
+        'circle-color': accentColor,
         'circle-radius': [
           'interpolate',
           ['linear'],
@@ -77,7 +76,7 @@ function MapboxMap() {
           200,
           40
         ],
-        'circle-opacity': 0.85
+        'circle-opacity': 0.75
       }
     });
 
@@ -88,8 +87,8 @@ function MapboxMap() {
       filter: ['==', 'cluster', true],
       layout: {
         'text-field': '{point_count_abbreviated}',
-        // 'text-font': ['Noto Sans'],
-        'text-size': 12
+        'text-font': ['Montserrat Medium'],
+        'text-size': 16
       },
       paint: {
         'text-color': '#ffffff'
@@ -161,6 +160,12 @@ function MapboxMap() {
   useEffect(() => {
     mapLoaded && map.getSource('data-source').setData(filteredData);
   }, [filteredData]);
+
+  // New accent color
+  useEffect(() => {
+    mapLoaded &&
+      map.setPaintProperty('data-cluster-layer', 'circle-color', accentColor);
+  }, [accentColor]);
 
   return <Canvas ref={mapCanvas}></Canvas>;
 }

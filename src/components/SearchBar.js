@@ -11,9 +11,17 @@ const customStyles = {
     width: '400px',
     height: '56px'
   }),
+  placeholder: (provided, state) => ({
+    ...provided,
+    color: '#898989'
+  }),
   valueContainer: (provided, state) => ({
     ...provided,
     paddingLeft: '25px'
+  }),
+  indicatorsContainer: (provided, state) => ({
+    ...provided,
+    marginRight: '32px'
   }),
   control: (provided, state) => ({
     ...provided,
@@ -84,6 +92,27 @@ function SearchBar() {
       styles={customStyles}
       isMulti
       placeholder="Enter a genre or city"
+      components={{
+        DropdownIndicator: () => (
+          <svg
+            width="20"
+            height="21"
+            viewBox="0 0 20 21"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="12.5" cy="7.5" r="7" stroke="#333333" />
+            <line
+              x1="0.646447"
+              y1="19.7175"
+              x2="7.71751"
+              y2="12.6464"
+              stroke="black"
+            />
+          </svg>
+        ),
+        IndicatorSeparator: () => null
+      }}
     />
   );
 }

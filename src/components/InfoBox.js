@@ -9,6 +9,7 @@ const InfoBox = styled.div`
   width: 485px;
   z-index: 1;
   background: ${({color}) => color || 'white'};
+  overflow-y: auto;
 `;
 
 const InfoBoxItem = styled.div`

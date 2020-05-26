@@ -1,5 +1,6 @@
 import {createContext, useReducer, useContext} from 'react';
 import produce from 'immer';
+import chroma from 'chroma-js';
 
 import {createFeatureCollection} from '../lib/create-feature-collection';
 import {createSubgenreColors} from '../lib/create-subgenre-colors';
@@ -10,6 +11,7 @@ const SET_DATA = 'SET_DATA';
 const SET_INFO_BOX_ITEMS = 'SET_INFO_BOX_ITEMS';
 const SET_SELECTED_INFO_BOX_ITEM = 'SET_SELECTED_INFO_BOX_ITEM';
 const SET_FILTERS = 'SET_FILTERS';
+const SET_ACCENT_COLOR = 'SET_ACCENT_COLOR';
 
 /* Define a context and a reducer for updating the context */
 const GlobalStateContext = createContext();
@@ -24,7 +26,8 @@ const initialState = {
   filters: null,
   infoBoxItems: null,
   selectedInfoBoxItem: null,
-  playerItem: null
+  playerItem: null,
+  accentColor: 'deeppink'
 };
 
 const globalStateReducer = produce((draft, action) => {
@@ -38,6 +41,7 @@ const globalStateReducer = produce((draft, action) => {
       return;
 
     case SET_INFO_BOX_ITEMS:
+      console.log('moin', action.payload);
       draft.infoBoxItems = action.payload;
       draft.selectedInfoBoxItem = null;
       return;
@@ -48,6 +52,12 @@ const globalStateReducer = produce((draft, action) => {
 
     case SET_FILTERS:
       draft.filters = action.payload;
+      draft.infoBoxItems = null;
+      draft.selectedInfoBoxItem = null;
+      return;
+
+    case SET_ACCENT_COLOR:
+      draft.accentColor = action.payload;
       return;
 
     default:
@@ -130,6 +140,13 @@ const useGlobalState = () => {
     });
   };
 
+  const setAccentColor = (color) => {
+    dispatch({
+      type: SET_ACCENT_COLOR,
+      payload: color
+    });
+  };
+
   const filterData = (data, filters) => {
     const genreFilters = filters
       .filter((f) => f.type === 'genre')
@@ -150,20 +167,39 @@ const useGlobalState = () => {
     };
   };
 
-  const getSearchTags = () => {};
+  const getAccentColor = (filters) => {
+    const genreFilters = filters.filter((f) => f.type === 'genre');
+
+    if (genreFilters.length === 1) {
+      return genreFilters[0].color;
+    } else if (genreFilters.length > 1) {
+      return chroma.average(genreFilters.map((f) => f.color)).hex();
+    }
+
+    return 'deeppink';
+  };
+
+  const filteredData = state.filters
+    ? filterData(state.data, state.filters)
+    : state.data;
 
   return {
     data: state.data,
-    filteredData: state.filters
-      ? filterData(state.data, state.filters)
-      : state.data,
-    infoBoxItems: state.infoBoxItems,
+    filteredData,
+    infoBoxItems: state.infoBoxItems
+      ? state.infoBoxItems
+      : state.filters
+      ? filteredData.features
+      : null,
     selectedInfoBoxItem: state.selectedInfoBoxItem,
     mapState: state.mapState,
     genres: state.genres,
     cities: state.cities,
     searchTags: [...state.genres, ...Object.values(state.cities)],
     filters: state.filters,
+    accentColor: state.filters
+      ? getAccentColor(state.filters)
+      : state.accentColor,
     actions: {
       setData,
       setMapBounds,
