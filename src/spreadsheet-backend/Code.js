@@ -2,12 +2,8 @@ var document = SpreadsheetApp.openById(
   '1jvQsbDus_irRz0lnUlfahZZy9ZOpK0VA5lSwt6Gt-ks'
 );
 
-// var allGenres = getAllGenres();
-
 function getAllGenres() {
-  var sheet = document.getSheetByName(
-    'genres (nein das funktioniert noch nicht :D)'
-  );
+  var sheet = document.getSheetByName('genres');
   var range = sheet.getDataRange();
   var data = range.getValues();
   var headings = data[0];
