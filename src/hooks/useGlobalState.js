@@ -41,7 +41,6 @@ const globalStateReducer = produce((draft, action) => {
       return;
 
     case SET_INFO_BOX_ITEMS:
-      console.log('moin', action.payload);
       draft.infoBoxItems = action.payload;
       draft.selectedInfoBoxItem = null;
       return;

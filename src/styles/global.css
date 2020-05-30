@@ -1,4 +1,11 @@
 html,
 body {
-  font-family: 'Montserrat', sans-serif;
+  /* font-family: 'PT Sans', sans-serif; */
+  font-family: 'PT Sans Narrow', sans-serif;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
 }

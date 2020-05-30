@@ -6,6 +6,10 @@ export function createFeatureCollection(data, genres) {
         type: 'Feature',
         properties: {
           ...item,
+          genres: [
+            ...item.genre.split(','),
+            ...item.subgenre.split(',')
+          ].filter(Boolean),
           color: genres.find(({id}) => id === item.genre).color
         },
         geometry: {

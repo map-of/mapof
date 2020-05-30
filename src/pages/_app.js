@@ -33,7 +33,7 @@ function MyApp({Component, pageProps, data, genres}) {
             rel="stylesheet"
           />
           <link
-            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=PT+Sans&family=PT+Sans+Narrow&display=swap"
             rel="stylesheet"
           />
         </Head>
