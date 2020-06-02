@@ -59,14 +59,10 @@ const InfoBoxItem = styled.div`
   top: ${({isActive}) => (isActive ? '90px' : 'initial')};
   bottom: ${({isActive}) => (isActive ? '0' : 'initial')};
   z-index: ${({isActive}) => (isActive ? '1' : 'initial')};
-  border-top: ${({isActive, accentColor}) =>
-    isActive
-      ? `1px solid ${chroma(accentColor).darken(1)}`
-      : `1px solid ${accentColor}`};
-  border-bottom: ${({isActive, accentColor}) =>
-    isActive
-      ? `1px solid ${chroma(accentColor).darken(1)}`
-      : `1px solid ${accentColor}`};
+  border-top: ${({isActive, color}) =>
+    isActive ? `1px solid ${chroma(color).darken(1)}` : `1px solid ${color}`};
+  border-bottom: ${({isActive, color}) =>
+    isActive ? `1px solid ${chroma(color).darken(1)}` : `1px solid ${color}`};
 `;
 
 const InfoBoxItemImage = styled.img`
@@ -210,7 +206,7 @@ function InfoBox() {
           <InfoBoxItem
             key={name}
             isActive={playerItem?.properties?.id === id}
-            accentColor={accentColor}
+            color={color}
           >
             {/* <InfoBoxItemImage
               loading="lazy"
