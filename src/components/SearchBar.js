@@ -91,7 +91,7 @@ function SearchBar() {
       options={options}
       styles={customStyles}
       isMulti
-      placeholder="Enter a genre or city"
+      placeholder="Discover new music"
       components={{
         DropdownIndicator: () => (
           <svg

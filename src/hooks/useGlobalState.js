@@ -12,6 +12,8 @@ const SET_INFO_BOX_ITEMS = 'SET_INFO_BOX_ITEMS';
 const SET_SELECTED_INFO_BOX_ITEM = 'SET_SELECTED_INFO_BOX_ITEM';
 const SET_FILTERS = 'SET_FILTERS';
 const SET_ACCENT_COLOR = 'SET_ACCENT_COLOR';
+const SET_PLAYER_ITEM = 'SET_PLAYER_ITEM';
+const SET_IS_PLAYING = 'SET_IS_PLAYING';
 
 /* Define a context and a reducer for updating the context */
 const GlobalStateContext = createContext();
@@ -27,6 +29,7 @@ const initialState = {
   infoBoxItems: null,
   selectedInfoBoxItem: null,
   playerItem: null,
+  isPlaying: false,
   accentColor: 'deeppink'
 };
 
@@ -57,6 +60,15 @@ const globalStateReducer = produce((draft, action) => {
 
     case SET_ACCENT_COLOR:
       draft.accentColor = action.payload;
+      return;
+
+    case SET_PLAYER_ITEM:
+      draft.playerItem = action.payload;
+      draft.isPlaying = true;
+      return;
+
+    case SET_IS_PLAYING:
+      draft.isPlaying = action.payload;
       return;
 
     default:
@@ -139,10 +151,23 @@ const useGlobalState = () => {
     });
   };
 
-  const setAccentColor = (color) => {
+  // const setAccentColor = (color) => {
+  //   dispatch({
+  //     type: SET_ACCENT_COLOR,
+  //     payload: color
+  //   });
+  // };
+
+  const setPlayerItem = (playerItem) => {
     dispatch({
-      type: SET_ACCENT_COLOR,
-      payload: color
+      type: SET_PLAYER_ITEM,
+      payload: playerItem
+    });
+  };
+  const setIsPlaying = (isPlaying) => {
+    dispatch({
+      type: SET_IS_PLAYING,
+      payload: isPlaying
     });
   };
 
@@ -178,6 +203,7 @@ const useGlobalState = () => {
     return 'deeppink';
   };
 
+
   const filteredData = state.filters
     ? filterData(state.data, state.filters)
     : state.data;
@@ -199,12 +225,16 @@ const useGlobalState = () => {
     accentColor: state.filters
       ? getAccentColor(state.filters)
       : state.accentColor,
+    playerItem: state.playerItem,
+    isPlaying: state.isPlaying,
     actions: {
       setData,
       setMapBounds,
       setInfoBoxItems,
       setSelectedInfoBoxItem,
-      setFilters
+      setFilters,
+      setPlayerItem,
+      setIsPlaying
     }
   };
 };

@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 
 import InfoBox from '../components/InfoBox';
 import SearchBar from '../components/SearchBar';
+import Player from '../components/Player';
 
 import '../styles/global.css';
 
@@ -39,6 +40,7 @@ function MyApp({Component, pageProps, data, genres}) {
         </Head>
         <MapboxMap />
         <InfoBox />
+        <Player />
         <SearchBar />
         <Component {...pageProps} />
       </ThemeProvider>
