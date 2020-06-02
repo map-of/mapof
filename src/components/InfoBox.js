@@ -202,6 +202,9 @@ function InfoBox() {
         const {
           properties: {color, name, genres, id}
         } = item;
+        const itemGenres =
+          typeof genres === 'string' ? JSON.parse(genres) : genres;
+
         return (
           <InfoBoxItem
             key={name}
@@ -231,12 +234,12 @@ function InfoBox() {
                     : play}
                 </InfoBoxItemAction>
                 <InfoBoxItemSubtitle>
-                  linked with {genres.length} genre
-                  {genres.length > 1 ? 's' : ''}
+                  linked with {itemGenres.length} genre
+                  {itemGenres.length > 1 ? 's' : ''}
                 </InfoBoxItemSubtitle>
               </InfoBoxItemTop>
               <InfoBoxItemGenres>
-                {genres.map((genre) => (
+                {itemGenres.map((genre) => (
                   <InfoBoxItemGenre color={color}>
                     #{genre.toUpperCase()}{' '}
                   </InfoBoxItemGenre>

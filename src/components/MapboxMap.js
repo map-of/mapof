@@ -96,7 +96,7 @@ function MapboxMap() {
     });
 
     map.on('click', 'data-layer', ({features}) => {
-      actions.setSelectedInfoBoxItem(features[0]);
+      actions.setInfoBoxItems([features[0]]);
     });
 
     map.on('click', 'data-cluster-layer', ({features}) => {
