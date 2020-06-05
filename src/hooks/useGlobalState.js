@@ -132,7 +132,6 @@ This also allows us to keep all of this state logic in this one file
 */
 const useGlobalState = () => {
   const [state, dispatch] = useContext(GlobalStateContext);
-  console.log({state});
 
   const setMapBounds = (bounds) => {
     dispatch({
