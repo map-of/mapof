@@ -20,8 +20,7 @@ function MapboxMap() {
   const [map, setMap] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  const {mapState, accentColor, filteredData, actions} = useGlobalState();
-  const {bounds} = mapState;
+  const {bounds, accentColor, filteredData, actions} = useGlobalState();
 
   // Init map
   useEffect(() => {

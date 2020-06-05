@@ -24,9 +24,9 @@ const theme = {
   }
 };
 
-function MyApp({Component, pageProps, data, genres}) {
+function MapOf({Component, pageProps, data, genres}) {
   return (
-    <GlobalStateProvider initialData={{data, genres}}>
+    <GlobalStateProvider initialData={{data, genres}} {...pageProps}>
       <ThemeProvider theme={theme}>
         <Head>
           <link
@@ -37,6 +37,36 @@ function MyApp({Component, pageProps, data, genres}) {
             href="https://fonts.googleapis.com/css2?family=PT+Sans&family=PT+Sans+Narrow&display=swap"
             rel="stylesheet"
           />
+          <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/static/apple-touch-icon.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/static/favicon-32x32.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/static/favicon-16x16.png"
+          />
+          <link rel="manifest" href="/static/site.webmanifest" />
+          <link
+            rel="mask-icon"
+            href="/static/safari-pinned-tab.svg"
+            color="#5bbad5"
+          />
+          <link rel="shortcut icon" href="/static/favicon.ico" />
+          <meta name="msapplication-TileColor" content="#da532c" />
+          <meta
+            name="msapplication-config"
+            content="/static/browserconfig.xml"
+          />
+          <meta name="theme-color" content="#ffffff" />
         </Head>
         <MapboxMap />
         <InfoBox />
@@ -52,7 +82,7 @@ function MyApp({Component, pageProps, data, genres}) {
 // every single page in your application. This disables the ability to
 // perform automatic static optimization, causing every page in your app to
 // be server-side rendered.
-MyApp.getInitialProps = async (appContext) => {
+MapOf.getInitialProps = async (appContext) => {
   const appProps = await App.getInitialProps(appContext);
 
   let data = null;
@@ -73,4 +103,4 @@ MyApp.getInitialProps = async (appContext) => {
   return {...appProps, data, genres};
 };
 
-export default MyApp;
+export default MapOf;

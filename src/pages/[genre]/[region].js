@@ -11,23 +11,27 @@ const Container = styled.div`
 `;
 
 function Region({boundingBox}) {
-  const {actions} = useGlobalState();
+  // const {actions} = useGlobalState();
 
-  useEffect(() => {
-    actions.setMapBounds(boundingBox);
-  }, []);
+  // useEffect(() => {
+  //   actions.setMapBounds(boundingBox);
+  // }, []);
 
   return null;
 }
 
 Region.getInitialProps = async ({query}) => {
-  const response = await fetch(
-    `https://api.mapbox.com/geocoding/v5/mapbox.places/${query.region}.json?` +
-      `access_token=pk.eyJ1IjoibXJtZXRhbHdvb2QiLCJhIjoiY2o1aWQ0MmNhMXR5eDJxb2R5eHowNTNjZCJ9.XKgKCOOPaRYjz9k1zMi3Ag`
-  );
-  const {features} = await response.json();
+  // const response = await fetch(
+  //   `https://api.mapbox.com/geocoding/v5/mapbox.places/${query.region}.json?` +
+  //     `access_token=pk.eyJ1IjoibXJtZXRhbHdvb2QiLCJhIjoiY2o1aWQ0MmNhMXR5eDJxb2R5eHowNTNjZCJ9.XKgKCOOPaRYjz9k1zMi3Ag`
+  // );
+  // const {features} = await response.json();
 
-  return {boundingBox: features[0].bbox};
+  return {
+    // boundingBox: features[0].bbox,
+    region: query.region,
+    genre: query.genre
+  };
 };
 
 export default Region;

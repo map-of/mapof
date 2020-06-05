@@ -6,6 +6,6 @@ function Genre({genre}) {
 
 export default Genre;
 
-Genre.getInitialProps = async (ctx) => {
-  return {genre: ctx.query.genre};
+Genre.getInitialProps = async ({query}) => {
+  return {genre: query.genre};
 };

@@ -19,9 +19,7 @@ const SET_IS_PLAYING = 'SET_IS_PLAYING';
 const GlobalStateContext = createContext();
 
 const initialState = {
-  mapState: {
-    bounds: [-180, -90, 180, 90]
-  },
+  bounds: [-180, -90, 180, 90],
   data: null,
   genres: null,
   cities: null,
@@ -36,7 +34,7 @@ const initialState = {
 const globalStateReducer = produce((draft, action) => {
   switch (action.type) {
     case SET_MAP_BOUNDS:
-      draft.mapState.bound = action.payload;
+      draft.bounds = action.payload;
       return;
 
     case SET_DATA:
@@ -77,29 +75,48 @@ const globalStateReducer = produce((draft, action) => {
 });
 
 /* Export a component to provide the context to its children. This is used in our _app.js file */
-export const GlobalStateProvider = ({children, initialData}) => {
+export const GlobalStateProvider = ({children, initialData, genre, region}) => {
+  const data = initialData?.data
+    ? createFeatureCollection(initialData.data, initialData.genres)
+    : initialState.data;
+
+  const genres = initialData?.genres
+    ? createSubgenreColors(initialData.genres)
+    : initialState.genres;
+
+  const cities = initialData?.data
+    ? initialData.data.reduce((acc, item) => {
+        acc[item.locationName] = acc[item.locationName] || {
+          lat: item.lat,
+          lng: item.lng,
+          type: 'city',
+          value: item.locationName.toLowerCase(),
+          label: item.locationName,
+          color: 'grey'
+        };
+
+        return acc;
+      }, {})
+    : initialData.cities;
+
+  const searchTags = [...genres, ...Object.values(cities)];
+
+  const filters = searchTags.filter((searchTag) => {
+    return (
+      genre?.split(' ').every((part) => searchTag.value.includes(part)) ||
+      genre?.split('-').every((part) => searchTag.value.includes(part)) ||
+      region?.split(' ').every((part) => searchTag.value.includes(part)) ||
+      region?.split('-').every((part) => searchTag.value.includes(part))
+    );
+  });
+
   const [state, dispatch] = useReducer(globalStateReducer, {
     ...initialState,
-    data: initialData?.data
-      ? createFeatureCollection(initialData.data, initialData.genres)
-      : initialState.data,
-    genres: initialData?.genres
-      ? createSubgenreColors(initialData.genres)
-      : initialState.genres,
-    cities: initialData?.data
-      ? initialData.data.reduce((acc, item) => {
-          acc[item.locationName] = acc[item.locationName] || {
-            lat: item.lat,
-            lng: item.lng,
-            type: 'city',
-            value: item.locationName.toLowerCase(),
-            label: item.locationName,
-            color: 'grey'
-          };
-
-          return acc;
-        }, {})
-      : initialData.cities
+    data,
+    genres,
+    cities,
+    searchTags,
+    filters: filters.length ? filters : initialState.filters
   });
 
   return (
@@ -115,6 +132,7 @@ This also allows us to keep all of this state logic in this one file
 */
 const useGlobalState = () => {
   const [state, dispatch] = useContext(GlobalStateContext);
+  console.log({state});
 
   const setMapBounds = (bounds) => {
     dispatch({
@@ -171,21 +189,17 @@ const useGlobalState = () => {
     });
   };
 
-  const filterData = (data, filters) => {
-    const genreFilters = filters
-      .filter((f) => f.type === 'genre')
-      .map((f) => f.value);
-    const cityFilters = filters
-      .filter((f) => f.type === 'city')
-      .map((f) => f.value);
-
+  const filterData = (data, genreFilters, cityFilters) => {
     return {
       ...data,
       features: data.features.filter((item) => {
         return (
-          (cityFilters.includes(item.properties.locationName.toLowerCase()) ||
+          (cityFilters
+            .map((f) => f.value)
+            .includes(item.properties.locationName.toLowerCase()) ||
             !cityFilters.length) &&
-          (genreFilters.includes(item.properties.genre) || !genreFilters.length)
+          (genreFilters.map((f) => f.value).includes(item.properties.genre) ||
+            !genreFilters.length)
         );
       })
     };
@@ -203,10 +217,33 @@ const useGlobalState = () => {
     return 'deeppink';
   };
 
+  const genreFilters = state.filters
+    ? state.filters.filter((f) => f.type === 'genre')
+    : [];
+
+  const cityFilters = state.filters
+    ? state.filters.filter((f) => f.type === 'city')
+    : [];
 
   const filteredData = state.filters
-    ? filterData(state.data, state.filters)
+    ? filterData(state.data, genreFilters, cityFilters)
     : state.data;
+
+  // const bounds = cityFilters.length
+  //   ? cityFilters.reduce(
+  //       (bounds, cityFilter) => {
+  //         console.log(cityFilter);
+  //         bounds[0] = Math.min(bounds[0], cityFilter.lng) - 3;
+  //         bounds[1] = Math.min(bounds[1], cityFilter.lat) - 3;
+
+  //         bounds[2] = Math.max(bounds[2], cityFilter.lng) + 3;
+  //         bounds[3] = Math.max(bounds[3], cityFilter.lat) + 3;
+
+  //         return bounds;
+  //       },
+  //       [999, 999, -999, -999]
+  //     )
+  //   : state.bounds;
 
   return {
     data: state.data,
@@ -217,10 +254,10 @@ const useGlobalState = () => {
       ? filteredData.features
       : null,
     selectedInfoBoxItem: state.selectedInfoBoxItem,
-    mapState: state.mapState,
+    bounds: state.bounds,
     genres: state.genres,
     cities: state.cities,
-    searchTags: [...state.genres, ...Object.values(state.cities)],
+    searchTags: state.searchTags,
     filters: state.filters,
     accentColor: state.filters
       ? getAccentColor(state.filters)

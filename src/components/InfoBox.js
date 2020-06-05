@@ -6,7 +6,7 @@ const InfoBoxContainer = styled.div`
   position: absolute;
   top: 40px;
   right: 40px;
-  bottom: ${({playerActive}) => (playerActive ? '120px' : '40px')};
+  bottom: 40px;
   width: 485px;
   z-index: 1;
   background: ${({accentColor}) => chroma(accentColor).brighten(0.25)};
@@ -63,12 +63,6 @@ const InfoBoxItem = styled.div`
     isActive ? `1px solid ${chroma(color).darken(1)}` : `1px solid ${color}`};
   border-bottom: ${({isActive, color}) =>
     isActive ? `1px solid ${chroma(color).darken(1)}` : `1px solid ${color}`};
-`;
-
-const InfoBoxItemImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 `;
 
 const InfoBoxItemInfo = styled.div`
@@ -143,8 +137,8 @@ const pause = (
   >
     <circle cx="15" cy="15" r="14.5" stroke="white" />
     <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M13 22H9V8H13V22ZM17 22V8H21V22H17Z"
       fill="white"
     />
@@ -165,7 +159,6 @@ function InfoBox() {
   if (selectedInfoBoxItem) {
     return (
       <InfoBoxContainer
-        playerActive={Boolean(playerItem)}
         color={selectedInfoBoxItem.properties.color}
         accentColor={accentColor}
       >
@@ -182,10 +175,7 @@ function InfoBox() {
   }
 
   return (
-    <InfoBoxContainer
-      accentColor={accentColor}
-      playerActive={Boolean(playerItem)}
-    >
+    <InfoBoxContainer accentColor={accentColor}>
       <InfoBoxHeader>
         <InfoBoxImage
           rotate={chroma(accentColor).hsl()[0]}
@@ -211,10 +201,6 @@ function InfoBox() {
             isActive={playerItem?.properties?.id === id}
             color={color}
           >
-            {/* <InfoBoxItemImage
-              loading="lazy"
-              src="https://placekitten.com/200/301"
-            /> */}
             <InfoBoxItemInfo color={color}>
               <InfoBoxItemTop>
                 <InfoBoxItemTitle> {name}</InfoBoxItemTitle>
