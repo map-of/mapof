@@ -28,8 +28,31 @@ const initialState = {
   selectedInfoBoxItem: null,
   playerItem: null,
   isPlaying: false,
-  accentColor: 'deeppink'
+  accentColor: 'deeppink',
+  submit: null
 };
+
+// {
+//   name,
+//   locationLng,
+//   locationLat,
+//   locationName,
+
+//   regionName,
+//   regionBB,
+//   countryName,
+//   countryBB
+
+//   genres,
+//   mediaLink,
+//   infoLink,
+//   description,
+//   username,
+//   facebook,
+//   instagram,
+//   twitter,
+//   website
+// }
 
 const globalStateReducer = produce((draft, action) => {
   switch (action.type) {
@@ -243,6 +266,8 @@ const useGlobalState = () => {
   //       [999, 999, -999, -999]
   //     )
   //   : state.bounds;
+
+  console.log(state.filters);
 
   return {
     data: state.data,
