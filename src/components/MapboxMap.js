@@ -4,7 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import useGlobalState from '../hooks/useGlobalState';
 
 mapboxgl.accessToken =
-  'pk.eyJ1IjoibXJtZXRhbHdvb2QiLCJhIjoiY2o1aWQ0MmNhMXR5eDJxb2R5eHowNTNjZCJ9.XKgKCOOPaRYjz9k1zMi3Ag';
+  'pk.eyJ1IjoicmF0ZWRvd2xtb20iLCJhIjoiY2xlY2pveHo1MGlxMTNvbGd2NWo0MGZ2eCJ9.vQS52w8JvgA6bF-gvDWLZA';
 
 const Canvas = styled.div`
   position: absolute;
@@ -26,7 +26,7 @@ function MapboxMap() {
   useEffect(() => {
     const newMap = new mapboxgl.Map({
       container: mapCanvas.current,
-      style: 'mapbox://styles/mrmetalwood/ck5qyupbd7gn01intq8zgxw3e',
+      style: 'mapbox://styles/ratedowlmom/clecjpulr000i01s4p6dy7mpa',
       bounds
     });
     setMap(newMap);

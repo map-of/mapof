@@ -23,7 +23,7 @@ function Region({boundingBox}) {
 Region.getInitialProps = async ({query}) => {
   // const response = await fetch(
   //   `https://api.mapbox.com/geocoding/v5/mapbox.places/${query.region}.json?` +
-  //     `access_token=pk.eyJ1IjoibXJtZXRhbHdvb2QiLCJhIjoiY2o1aWQ0MmNhMXR5eDJxb2R5eHowNTNjZCJ9.XKgKCOOPaRYjz9k1zMi3Ag`
+  //     `access_token=pk.eyJ1IjoicmF0ZWRvd2xtb20iLCJhIjoiY2xlY2pveHo1MGlxMTNvbGd2NWo0MGZ2eCJ9.vQS52w8JvgA6bF-gvDWLZA`
   // );
   // const {features} = await response.json();
 
